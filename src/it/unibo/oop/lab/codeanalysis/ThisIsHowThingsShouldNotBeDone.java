@@ -16,6 +16,10 @@ import java.util.Collection;
  */
 public class ThisIsHowThingsShouldNotBeDone {
 
+    public ThisIsHowThingsShouldNotBeDone() {
+        
+    }
+
     /*
      * PMD complains:
      * 
@@ -43,13 +47,13 @@ public class ThisIsHowThingsShouldNotBeDone {
      * 
      * Missing Javadoc
      */
-    public static void main(String[] a) {
+    public static void main(final String[] args) {
         /*
          * PMD Complains:
          * 
          * this variable should be final!
          */
-        Collection<Object> c = new ArrayList<>();
+        final Collection<Object> c = new ArrayList<>();
         /*
          * PMD complains:
          * 
@@ -61,8 +65,9 @@ public class ThisIsHowThingsShouldNotBeDone {
          * 
          * What does it mean "43"? It's a magic number!
          */
-        for (int i = 0; i < 43; i++)
+        for (int i = 0; i < 43; i++) {
             c.add(new Object());
+        }
         /*
          * FindBugs complains
          * 
