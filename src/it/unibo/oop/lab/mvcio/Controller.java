@@ -36,7 +36,7 @@ public class Controller {
      * @param file
      */
     public Controller() {
-        this.currentFile = new File(System.getProperty("user.home")+);
+        this.currentFile = new File(System.getProperty("user.home")+File.separator+"output.txt");
     }
     /**
      * @param file

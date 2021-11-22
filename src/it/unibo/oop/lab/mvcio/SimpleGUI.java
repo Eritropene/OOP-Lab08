@@ -1,9 +1,11 @@
 package it.unibo.oop.lab.mvcio;
 
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 /**
  * A very simple program using a graphical interface.
@@ -11,7 +13,7 @@ import javax.swing.JFrame;
  */
 public final class SimpleGUI {
 
-    private final JFrame frame = new JFrame();
+    private final JFrame frame = new JFrame("SimpleGUI");
 
     /*
      * Once the Controller is done, implement this class in such a way that:
@@ -51,12 +53,41 @@ public final class SimpleGUI {
         final int sw = (int) screen.getWidth();
         final int sh = (int) screen.getHeight();
         frame.setSize(sw / 2, sh / 2);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JPanel panel = new JPanel(new BorderLayout());
+        JTextArea text = new JTextArea();
+        JButton button = new JButton("SAVE");
+        panel.add(text, BorderLayout.CENTER);
+        panel.add(button, BorderLayout.SOUTH);
+        
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e){
+                try {
+                    Controller c = new Controller();
+                    c.printStringInFile(text.getText());
+                } catch (Exception err) {
+                    return;
+                }
+                text.setText("DONE!");
+            }
+        });
+        frame.setContentPane(panel);
         /*
          * Instead of appearing at (0,0), upper left corner of the screen, this
          * flag makes the OS window manager take care of the default positioning
          * on screen. Results may vary, but it is generally the best choice.
          */
         frame.setLocationByPlatform(true);
+    }
+    
+    private void show() {
+        frame.setVisible(true);
+    }
+    
+    public static void main (String... args) {
+        SimpleGUI sp = new SimpleGUI();
+        sp.show();
     }
 
 }
