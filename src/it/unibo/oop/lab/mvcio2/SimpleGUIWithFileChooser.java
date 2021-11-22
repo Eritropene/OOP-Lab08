@@ -1,5 +1,15 @@
 package it.unibo.oop.lab.mvcio2;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.*;
+
+import it.unibo.oop.lab.mvcio.Controller;
+
 /**
  * A very simple program using a graphical interface.
  * 
@@ -31,5 +41,75 @@ public final class SimpleGUIWithFileChooser {
      * update the UI: in this example the UI knows when should be updated, so
      * try to keep things separated.
      */
-
+    private final JFrame frame = new JFrame("SimpleGUIWithFileChooser");
+    private Controller c = new Controller();
+    /**
+     * builds a new {@link SimpleGUI}.
+     */
+    public SimpleGUIWithFileChooser() {
+        /*
+         * Make the frame half the resolution of the screen. This very method is
+         * enough for a single screen setup. In case of multiple monitors, the
+         * primary is selected.
+         * 
+         * In order to deal coherently with multimonitor setups, other
+         * facilities exist (see the Java documentation about this issue). It is
+         * MUCH better than manually specify the size of a window in pixel: it
+         * takes into account the current resolution.
+         */
+        final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        final int sw = (int) screen.getWidth();
+        final int sh = (int) screen.getHeight();
+        frame.setSize(sw / 2, sh / 2);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JPanel panel = new JPanel(new BorderLayout(20,20));
+        JTextArea text = new JTextArea();
+        JButton button = new JButton("SAVE");
+        panel.add(text, BorderLayout.CENTER);
+        panel.add(button, BorderLayout.SOUTH);
+        
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e){
+                try {
+                    c.printStringInFile(text.getText());
+                } catch (Exception err) {
+                    return;
+                }
+                text.setText("DONE!");
+            }
+        });
+        JPanel panel2 = new JPanel(new BorderLayout());
+        JTextField field = new JTextField();
+        JButton browse = new JButton("Browse...");
+        panel2.add(field, BorderLayout.CENTER);
+        panel2.add(browse, BorderLayout.LINE_END);
+        panel.add(panel2, BorderLayout.NORTH);
+        
+        browse.addActionListener(new ActionListener() {
+           public void actionPerformed(final ActionEvent e) {
+               JFileChooser chooser = new JFileChooser(c.getCurrentFilePath());
+               int result = chooser.showSaveDialog(null);
+               if (result == JFileChooser.APPROVE_OPTION) {
+                   c.setCurrentFile(chooser.getSelectedFile());
+               }
+           }
+        });
+        frame.setContentPane(panel);
+        /*
+         * Instead of appearing at (0,0), upper left corner of the screen, this
+         * flag makes the OS window manager take care of the default positioning
+         * on screen. Results may vary, but it is generally the best choice.
+         */
+        frame.setLocationByPlatform(true);
+    }
+    
+    private void show() {
+        frame.setVisible(true);
+    }
+    
+    public static void main (String... args) {
+        SimpleGUIWithFileChooser sp = new SimpleGUIWithFileChooser();
+        sp.show();
+    }
 }
